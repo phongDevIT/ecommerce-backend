@@ -167,6 +167,20 @@ const getDetailsUser = (id) => {
         }
     });
 };
+// const refreshTokenService = (token) => {
+//     return new Promise(async (resolve, reject) => {
+//         try {
+//             console.log("token", token);
+//             resolve({
+//                 status: "OK",
+//                 message: "SUCCESS",
+//             });
+//         } catch (error) {
+//             console.log(error);
+//             reject(error);
+//         }
+//     });
+// };
 module.exports = {
     createUser,
     loginUser,
