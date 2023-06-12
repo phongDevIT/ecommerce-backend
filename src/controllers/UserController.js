@@ -70,7 +70,6 @@ const updateUser = async (req, res) => {
                 message: "The userId is required",
             });
         }
-        console.log("userId: ", userId);
         const response = await UserService.updateUser(userId, data);
         return res.status(200).json(response);
     } catch (e) {
