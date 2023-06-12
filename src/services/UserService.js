@@ -11,8 +11,8 @@ const createUser = (newUser) => {
             });
             if (checkUser !== null) {
                 resolve({
-                    status: "ERROR",
-                    message: "The email is already registered.",
+                    status: "ERR",
+                    message: "The email is already.",
                 });
             }
             const hast = bcrypt.hashSync(password, 10);
@@ -36,7 +36,7 @@ const createUser = (newUser) => {
 };
 const loginUser = (userLogin) => {
     return new Promise(async (resolve, reject) => {
-        const { name, email, password, confirmPassword, phone } = userLogin;
+        const { email, password } = userLogin;
 
         try {
             const checkUser = await User.findOne({
@@ -44,7 +44,7 @@ const loginUser = (userLogin) => {
             });
             if (checkUser === null) {
                 resolve({
-                    status: "ERROR",
+                    status: "ERR",
                     message: "The user is not defined.",
                 });
             }
@@ -55,7 +55,7 @@ const loginUser = (userLogin) => {
             console.log("comparePassword: ", comparePassword);
             if (!comparePassword) {
                 resolve({
-                    status: "ERROR",
+                    status: "ERR",
                     message: "The password or user is incorrect.",
                 });
             }
@@ -167,20 +167,7 @@ const getDetailsUser = (id) => {
         }
     });
 };
-// const refreshTokenService = (token) => {
-//     return new Promise(async (resolve, reject) => {
-//         try {
-//             console.log("token", token);
-//             resolve({
-//                 status: "OK",
-//                 message: "SUCCESS",
-//             });
-//         } catch (error) {
-//             console.log(error);
-//             reject(error);
-//         }
-//     });
-// };
+
 module.exports = {
     createUser,
     loginUser,

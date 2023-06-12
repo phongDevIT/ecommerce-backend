@@ -109,14 +109,116 @@ const deleteProduct = (id) => {
         }
     });
 };
-const getAllProduct = () => {
+// const getAllProduct = (limit, page, sort, filter) => {
+//     return new Promise(async (resolve, reject) => {
+//         try {
+//             const label = filter[0];
+//             const totalProduct = await Product.count();
+//             if (filter) {
+//                 const allObjectFilter = await Product.find({
+//                     [label]: { $regex: filter[1] },
+//                 })
+//                     .limit(limit)
+//                     .skip(page * limit);
+
+//                 resolve({
+//                     status: "OK",
+//                     message: "ALL USER SUCCESS",
+//                     data: allObjectFilter,
+//                     total: totalProduct,
+//                     pageCurrent: Number(page + 1),
+//                     totalPage: Math.ceil(totalProduct / limit),
+//                 });
+//             }
+//             if (sort) {
+//                 const objectSort = {};
+//                 objectSort[sort[1]] = sort[0];
+//                 const allProductSort = await Product.find()
+//                     .limit(limit)
+//                     .skip(page * limit)
+//                     .sort(objectSort);
+//                 resolve({
+//                     status: "OK",
+//                     message: "ALL USER SUCCESS",
+//                     data: allProductSort,
+//                     total: totalProduct,
+//                     pageCurrent: Number(page + 1),
+//                     totalPage: Math.ceil(totalProduct / limit),
+//                 });
+//             }
+//             const allProduct = await Product.find()
+//                 .limit(limit)
+//                 .skip(page * limit)
+//                 .sort({
+//                     name: sort,
+//                 });
+//             resolve({
+//                 status: "OK",
+//                 message: "ALL USER SUCCESS",
+//                 data: allProduct,
+//                 total: totalProduct,
+//                 pageCurrent: Number(page + 1),
+//                 totalPage: Math.ceil(totalProduct / limit),
+//             });
+//         } catch (error) {
+//             console.log(error);
+//             reject(error);
+//         }
+//     });
+// };
+const getAllProduct = (limit, page, sort, filter) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const allProduct = await Product.find();
+            const totalProduct = await Product.count();
+
+            if (filter && filter.length >= 2) {
+                const label = filter[0];
+                const allObjectFilter = await Product.find({
+                    [label]: { $regex: filter[1] },
+                })
+                    .limit(limit)
+                    .skip(page * limit);
+
+                resolve({
+                    status: "OK",
+                    message: "ALL USER SUCCESS",
+                    data: allObjectFilter,
+                    total: totalProduct,
+                    pageCurrent: Number(page) + 1,
+                    totalPage: Math.ceil(totalProduct / limit),
+                });
+            }
+
+            if (sort && sort.length >= 2) {
+                const objectSort = {};
+                objectSort[sort[1]] = sort[0];
+                const allProductSort = await Product.find()
+                    .limit(limit)
+                    .skip(page * limit)
+                    .sort(objectSort);
+
+                resolve({
+                    status: "OK",
+                    message: "ALL USER SUCCESS",
+                    data: allProductSort,
+                    total: totalProduct,
+                    pageCurrent: Number(page) + 1,
+                    totalPage: Math.ceil(totalProduct / limit),
+                });
+            }
+
+            const allProduct = await Product.find()
+                .limit(limit)
+                .skip(page * limit)
+                .sort({ name: sort });
+
             resolve({
                 status: "OK",
                 message: "ALL USER SUCCESS",
                 data: allProduct,
+                total: totalProduct,
+                pageCurrent: Number(page) + 1,
+                totalPage: Math.ceil(totalProduct / limit),
             });
         } catch (error) {
             console.log(error);
@@ -124,6 +226,7 @@ const getAllProduct = () => {
         }
     });
 };
+
 module.exports = {
     createProduct,
     updateProduct,
