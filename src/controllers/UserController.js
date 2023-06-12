@@ -47,10 +47,11 @@ const loginUser = async (req, res) => {
         }
         const response = await UserService.loginUser(req.body);
         const { refresh_token, ...newReponse } = response;
-        // console.log("response: ", response);
         res.cookie("refresh_token", refresh_token, {
             HttpOnly: true,
-            Secure: true,
+            secure: false,
+            samesite: "strict",
+            path: "/",
         });
         return res.status(200).json(newReponse);
     } catch (e) {
@@ -139,6 +140,19 @@ const refreshToken = async (req, res) => {
         });
     }
 };
+const logoutUser = async (req, res) => {
+    try {
+        res.clearCookie("refresh_token");
+        return res.status(200).json({
+            status: "OK",
+            message: "Logged out successfully",
+        });
+    } catch (e) {
+        return res.status(404).json({
+            message: e,
+        });
+    }
+};
 module.exports = {
     createUser,
     loginUser,
@@ -147,4 +161,5 @@ module.exports = {
     getAllUser,
     getDetailsUser,
     refreshToken,
+    logoutUser,
 };
